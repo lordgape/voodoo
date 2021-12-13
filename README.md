@@ -55,5 +55,13 @@ The business goal of the game database is to provide an internal service to get 
 #### Question 1
 For you what is missing in the project to make it production ready?
 
+- Add cache to improve performance of read option 
+- Add docker for local setup. This help with continous integration
+- Organize code into separate modules
+
 #### Question 2
 To achieve the final business goal what is your Roadmap and Action plan?
+
+- Register with apps market place and get access to their API
+- Scrape data of the API
+- Transform and present data to other service who needs it
