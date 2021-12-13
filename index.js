@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const { Op } = require('sequelize');
 const db = require('./models');
 
 const app = express();
@@ -51,9 +52,39 @@ app.put('/api/games/:id', (req, res) => {
     });
 });
 
+app.get('/api/games/search', (req, res) => {
+  let { name, platform } = req.query;
 
-app.listen(3000, () => {
-  console.log('Server is up on port 3000');
+  // Build Query
+  let option = {};
+  if (name) {
+    name = name?.replace(/\"/g, '');
+    option['where'] = {
+      name: {
+        [Op.like]: `%${name}%`,
+      },
+    };
+  }
+
+  if (platform) {
+    platform = platform?.toLowerCase()?.replace(/\"/g, '');
+
+    if (platform !== 'all') {
+      option['where'] = {
+        platform: `${platform}`,
+      };
+    }
+  }
+
+  db.Game.findAll(option).then((games) => {
+    res.json(games);
+  });
+});
+
+// TODO: Change port back to 3000
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server is up on port ${PORT}`);
 });
 
 module.exports = app;
